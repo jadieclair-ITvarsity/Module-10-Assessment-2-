@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Recipe Book</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script
+      src="https://kit.fontawesome.com/2f8dbc5d0f.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body class="body-meals" onload="getRecipeList()">
+    <div class="header">
+      <a href="index.html"><i class="fas fa-arrow-left"></i></a>
+      <img src="./images/logo-text.png" alt="Logo" />
+    </div>
+
+    <div id="meals">
+      <div class="meals-list" id="output"></div>
+    </div>
+
+    <script>
+      // Retrieve the category from the URL parameters
+      let category = getCategory();
+      // Function to get the list of recipes based on the category
+      function getRecipeList() {
+        // Define the root path of the API
+        let rootPath = "https://mysite.itvarsity.org/api/recipe-book/";
+        let fullPath = rootPath + "get-recipes/?category=" + category;
+
+        // Fetch data from the API
+        fetch(fullPath)
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (data) {
+            // Initialize an empty string to build the HTML output
+            let output = "";
+            for (let i = 0; i < data.length; i++) {
+              // Construct HTML for each recipe and append to the output string
+              output += `
+                <a href="show-recipe.html?id=${data[i].id}">
+                <div class="meals-list-item">
+                  <h1>
+                    ${data[i].title}
+                    <i class="fas fa-chevron-circle-right"></i>
+                  </h1>   
+                  <p>
+                    ${data[i].description}
+                  </p> 
+                  </a>              
+                </div>
+              `;
+            }
+            document.getElementById("output").innerHTML = output;
+          });
+      }
+
+      // Function to retrieve the category from the URL parameters
+      function getCategory() {
+        let url = window.location.href;
+        let pos = url.search("=");
+        let category = url.slice(pos + 1);
+
+        // Return the category
+        return category;
+      }
+    </script>
+  </body>
+</html>
